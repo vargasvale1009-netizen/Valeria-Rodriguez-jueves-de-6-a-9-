@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+    <head th:replace="~{general/fragmentos :: head}"/>
+
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"/>
+
+        <div class="container-fluid mt-4 px-4">
+            <div class="row">
+
+                <!-- Tabla de categorías -->
+                <div class="col-md-9">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-0">
+                            <h5 class="card-title px-3 pt-3 pb-2 mb-0 border-bottom">
+                                [[#{categoria.listado.titulo}]]
+                            </h5>
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>[[#{categoria.col.descripcion}]]</th>
+                                        <th>[[#{categoria.col.imagen}]]</th>
+                                        <th>[[#{categoria.col.activo}]]</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="cat : ${categorias}">
+                                        <td th:text="${cat.id}" class="align-middle"></td>
+                                        <td th:text="${cat.descripcion}" class="align-middle"></td>
+                                        <td class="align-middle">
+                                            <img th:src="${cat.imagen}"
+                                                 th:alt="${cat.descripcion}"
+                                                 class="img-categoria"
+                                                 onerror="this.alt='Imagen de categoría'; this.src=''; this.className='text-muted fst-italic img-error'"/>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span th:if="${cat.activo}"  class="text-dark">[[#{categoria.estado.activa}]]</span>
+                                            <span th:unless="${cat.activo}" class="text-dark">[[#{categoria.estado.inactiva}]]</span>
+                                        </td>
+                                        <td class="align-middle text-nowrap">
+                                            <a th:href="@{/categoria/eliminar/{id}(id=${cat.id})}"
+                                               class="btn btn-danger btn-sm me-1"
+                                               onclick="return confirm('¿Desea eliminar esta categoría?')">
+                                                <i class="fas fa-trash"></i> [[#{categoria.btn.eliminar}]]
+                                            </a>
+                                            <a th:href="@{/categoria/actualizar/{id}(id=${cat.id})}"
+                                               class="btn btn-warning btn-sm">
+                                                <i class="fas fa-pencil-alt"></i> [[#{categoria.btn.actualizar}]]
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel Total Categorías -->
+                <div class="col-md-3">
+                    <div class="card bg-success text-white text-center shadow-sm">
+                        <div class="card-body py-4">
+                            <h5 class="card-title fw-bold">[[#{categoria.total.titulo}]]</h5>
+                            <div class="mt-2">
+                                <i class="fas fa-layer-group fa-2x"></i>
+                                <h2 class="fw-bold mt-1" th:text="${totalCategorias}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer th:replace="~{general/fragmentos :: footer}"/>
+    </body>
+</html>
