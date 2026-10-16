@@ -27,6 +27,47 @@
             </div>
         </div>
 
+        <!-- Grid de tarjetas de productos -->
+        <div class="contenedor-listado mt-4 mb-5">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+
+                <div th:each="prod : ${productos}" class="col">
+                    <div class="card-producto h-100">
+
+                        <!-- Imagen del producto -->
+                        <div class="card-producto-img-wrap">
+                            <img th:src="${prod.imagen}"
+                                 th:alt="${prod.descripcion}"
+                                 class="card-producto-img"
+                                 onerror="this.src=''; this.className='card-producto-img-fallback'"/>
+                        </div>
+
+                        <!-- Cuerpo -->
+                        <div class="card-producto-body">
+                            <h6 class="card-producto-nombre" th:text="${prod.descripcion}"></h6>
+                            <p class="card-producto-detalle"
+                               th:text="${prod.detalle != null ? prod.detalle : ''}"></p>
+                        </div>
+
+                        <!-- Pie: precio, unidades, carrito -->
+                        <div class="card-producto-footer">
+                            <span class="card-producto-precio"
+                                  th:text="'₡' + ${#numbers.formatDecimal(prod.precio, 1, 'COMMA', 2, 'POINT')}">
+                            </span>
+                            <span class="badge-unidades"
+                                  th:text="${prod.existencias} + ' unidades'">
+                            </span>
+                            <button class="btn-carrito" title="Agregar al carrito">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <footer th:replace="~{general/fragmentos :: footer}"/>
     </body>
 </html>

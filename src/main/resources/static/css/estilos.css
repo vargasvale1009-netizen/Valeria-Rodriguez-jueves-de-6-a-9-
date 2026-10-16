@@ -250,3 +250,104 @@ footer p {
     color: #0d4f8a !important;
     border-bottom: 3px solid #1a6ca8;
 }
+
+/* ===== CARDS DE PRODUCTOS (index) ===== */
+.card-producto {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+}
+
+.card-producto-img-wrap {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #f7f8fa;
+}
+
+.card-producto-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-producto-img-fallback {
+    width: 100%;
+    height: 100%;
+    background: #f0f0f0;
+    display: block;
+}
+
+.card-producto-body {
+    padding: 0.75rem 0.85rem 0.4rem;
+    flex: 1;
+}
+
+.card-producto-nombre {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #1f2328;
+    margin-bottom: 0.35rem;
+    text-align: center;
+}
+
+.card-producto-detalle {
+    font-size: 0.85rem;
+    color: #57606a;
+    margin-bottom: 0;
+    /* Truncar a 1 línea con puntos suspensivos */
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: left;
+}
+
+.card-producto-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem 0.75rem;
+    border-top: 1px solid #e5e7eb;
+    flex-wrap: nowrap;
+}
+
+.card-producto-precio {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1f2328;
+    white-space: nowrap;
+}
+
+.badge-unidades {
+    background-color: #2e7d32;
+    color: #ffffff;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btn-carrito {
+    margin-left: auto;
+    background-color: #1a6ca8;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.btn-carrito:hover {
+    background-color: #0d4f8a;
+}

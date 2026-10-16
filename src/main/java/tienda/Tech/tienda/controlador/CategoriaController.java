@@ -65,6 +65,6 @@ public class CategoriaController {
                 });
 
         return "redirect:/categoria/listado";
-        /*Semana 6 parte 1 */
+        /*Semana 6 */
     }
 }
