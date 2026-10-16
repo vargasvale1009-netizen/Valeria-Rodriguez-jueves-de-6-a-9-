@@ -4,7 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import tienda.Tech.tienda.modelo.Categoria;
 
 import java.util.ArrayList;
@@ -37,13 +40,26 @@ public class CategoriaController {
         return "redirect:/categoria/listado";
     }
 
-    @GetMapping("/actualizar/{id}")
-    public String actualizar(@PathVariable Integer id, Model model) {
-        Categoria categoria = categorias.stream()
+    @PostMapping("/actualizar")
+    public String actualizarPost(
+            @RequestParam Integer id,
+            @RequestParam String descripcion,
+            @RequestParam(required = false) String activo,
+            @RequestParam(value = "imagenFile", required = false) MultipartFile imagenFile) {
+
+        categorias.stream()
                 .filter(c -> c.getId().equals(id))
                 .findFirst()
-                .orElse(null);
-        model.addAttribute("categoria", categoria);
-        return "categoria/listado";  // por ahora redirige al listado
+                .ifPresent(c -> {
+                    c.setDescripcion(descripcion);
+                    c.setActivo("true".equals(activo));
+                    // Si se sube un archivo nuevo, usar su nombre; de lo contrario mantener la imagen actual
+                    if (imagenFile != null && !imagenFile.isEmpty()) {
+                        c.setImagen("/img/" + imagenFile.getOriginalFilename());
+                    }
+                });
+
+        return "redirect:/categoria/listado";
+        /*Boton de actualizar en PRODUCTOS = Medio Funcional */
     }
 }

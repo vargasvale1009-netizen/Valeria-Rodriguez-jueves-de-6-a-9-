@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+    <head th:replace="~{general/fragmentos :: head}"/>
+
+    <body>
+        <header th:replace="~{general/fragmentos :: header}"/>
+
+        <!-- Barra de acción -->
+        <div class="contenedor-listado pt-3 pb-1">
+            <a th:href="@{/producto/agregar}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> [[#{producto.btn.agregar}]]
+            </a>
+        </div>
+
+        <div class="contenedor-listado mt-3">
+            <div class="row">
+
+                <!-- Tabla de productos -->
+                <div class="col-md-9">
+                    <div class="card border">
+                        <div class="card-body p-0">
+                            <h5 class="px-3 pt-3 pb-2 mb-0 border-bottom fw-normal">
+                                [[#{producto.listado.titulo}]]
+                            </h5>
+                            <table class="table table-hover mb-0 tabla-productos">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>[[#{producto.col.descripcion}]]</th>
+                                        <th>[[#{producto.col.precio}]]</th>
+                                        <th>[[#{producto.col.existencias}]]</th>
+                                        <th>[[#{producto.col.totalProductos}]]</th>
+                                        <th>[[#{producto.col.imagen}]]</th>
+                                        <th>[[#{producto.col.categoria}]]</th>
+                                        <th>[[#{producto.col.activo}]]</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="prod : ${productos}">
+                                        <td th:text="${prod.id}" class="align-middle"></td>
+                                        <td th:text="${prod.descripcion}" class="align-middle"></td>
+                                        <td class="align-middle"
+                                            th:text="${#numbers.formatDecimal(prod.precio, 1, 'COMMA', 2, 'POINT')}">
+                                        </td>
+                                        <td th:text="${prod.existencias}" class="align-middle text-center"></td>
+                                        <td class="align-middle"
+                                            th:text="${#numbers.formatDecimal(prod.precio * prod.existencias, 1, 'COMMA', 2, 'POINT')}">
+                                        </td>
+                                        <td class="align-middle">
+                                            <img th:src="${prod.imagen}"
+                                                 th:alt="${prod.descripcion}"
+                                                 class="img-producto"
+                                                 onerror="this.alt='Imagen de producto'; this.src=''; this.className='text-muted fst-italic img-error'"/>
+                                        </td>
+                                        <td class="align-middle text-center categoria-id-link"
+                                            th:text="${prod.categoriaId}">
+                                        </td>
+                                        <td class="align-middle">
+                                            <span th:if="${prod.activo}" class="text-dark">[[#{producto.estado.activa}]]</span>
+                                            <span th:unless="${prod.activo}" class="text-dark">[[#{producto.estado.inactiva}]]</span>
+                                        </td>
+                                        <td class="align-middle text-nowrap">
+                                            <a th:href="@{/producto/eliminar/{id}(id=${prod.id})}"
+                                               class="btn btn-danger btn-sm me-1"
+                                               onclick="return confirm('¿Desea eliminar este producto?')">
+                                                <i class="fas fa-trash"></i> [[#{producto.btn.eliminar}]]
+                                            </a>
+                                            <!-- Botón Actualizar: abre el modal con los datos del producto -->
+                                            <button type="button"
+                                                    class="btn btn-warning btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalActualizarProducto"
+                                                    th:data-id="${prod.id}"
+                                                    th:data-categoriaid="${prod.categoriaId}"
+                                                    th:data-descripcion="${prod.descripcion}"
+                                                    th:data-detalle="${prod.detalle}"
+                                                    th:data-precio="${prod.precio}"
+                                                    th:data-existencias="${prod.existencias}"
+                                                    th:data-activo="${prod.activo}"
+                                                    th:data-imagen="${prod.imagen}"
+                                                    onclick="abrirModalProducto(this)">
+                                                <i class="fas fa-pencil-alt"></i> [[#{producto.btn.actualizar}]]
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel Total Productos -->
+                <div class="col-md-3">
+                    <div class="card card-total-categorias text-white text-center">
+                        <div class="card-body py-4">
+                            <h5 class="card-title fw-bold">[[#{producto.total.titulo}]]</h5>
+                            <div class="mt-2">
+                                <i class="fas fa-layer-group fa-2x"></i>
+                                <h2 class="fw-bold mt-1" th:text="${totalProductos}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== MODAL ACTUALIZAR PRODUCTO ===== -->
+        <div class="modal fade" id="modalActualizarProducto" tabindex="-1"
+             aria-labelledby="modalActualizarProductoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+
+                    <!-- Header cyan -->
+                    <div class="modal-header modal-header-producto">
+                        <h5 class="modal-title" id="modalActualizarProductoLabel">[[#{producto.modal.titulo}]]</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Formulario -->
+                    <form id="formActualizarProducto" th:action="@{/producto/actualizar}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="modalProdId" name="id"/>
+
+                        <div class="modal-body">
+
+                            <!-- Categoría -->
+                            <div class="mb-3">
+                                <label for="modalProdCategoria" class="form-label">[[#{producto.col.categoria}]]</label>
+                                <select class="form-select" id="modalProdCategoria" name="categoriaId" required>
+                                    <option th:each="cat : ${categorias}"
+                                            th:value="${cat.id}"
+                                            th:text="${cat.descripcion}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="mb-3">
+                                <label for="modalProdDescripcion" class="form-label">[[#{producto.col.descripcion}]]</label>
+                                <input type="text" class="form-control" id="modalProdDescripcion" name="descripcion" required/>
+                            </div>
+
+                            <!-- Detalle -->
+                            <div class="mb-3">
+                                <label for="modalProdDetalle" class="form-label">[[#{producto.col.detalle}]]</label>
+                                <textarea class="form-control" id="modalProdDetalle" name="detalle" rows="3"></textarea>
+                            </div>
+
+                            <!-- Precio -->
+                            <div class="mb-3">
+                                <label for="modalProdPrecio" class="form-label">[[#{producto.col.precio}]]</label>
+                                <input type="number" step="0.01" min="0" class="form-control"
+                                       id="modalProdPrecio" name="precio" required/>
+                            </div>
+
+                            <!-- Existencias -->
+                            <div class="mb-3">
+                                <label for="modalProdExistencias" class="form-label">[[#{producto.col.existencias}]]</label>
+                                <input type="number" min="0" class="form-control"
+                                       id="modalProdExistencias" name="existencias" required/>
+                            </div>
+
+                            <!-- Activo -->
+                            <div class="mb-3">
+                                <label class="form-label d-block">[[#{producto.col.activo}]]</label>
+                                <input type="checkbox" id="modalProdActivo" name="activo" value="true" class="form-check-input"/>
+                            </div>
+
+                            <!-- Ruta de la imagen -->
+                            <div class="mb-3">
+                                <label for="modalProdImagen" class="form-label">[[#{producto.col.imagen}]]</label>
+                                <input type="file" class="form-control" id="modalProdImagen" name="imagenFile"
+                                       accept="image/*" onchange="previsualizarImagenProducto(this)"/>
+                            </div>
+
+                            <!-- Preview imagen actual -->
+                            <div class="text-center mt-2">
+                                <img id="modalProdImagenPreview"
+                                     src=""
+                                     alt="preview"
+                                     class="img-modal-preview"
+                                     onerror="this.style.display='none'"/>
+                            </div>
+
+                        </div>
+
+                        <!-- Footer con botones -->
+                        <div class="modal-footer justify-content-end">
+                            <button type="button" class="btn btn-secondary btn-modal-cerrar" data-bs-dismiss="modal">
+                                <i class="fas fa-times"></i> [[#{producto.modal.cerrar}]]
+                            </button>
+                            <button type="submit" class="btn btn-success btn-modal-guardar">
+                                <i class="fas fa-save"></i> [[#{producto.modal.guardar}]]
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function abrirModalProducto(btn) {
+                document.getElementById('modalProdId').value          = btn.dataset.id;
+                document.getElementById('modalProdDescripcion').value = btn.dataset.descripcion;
+                document.getElementById('modalProdDetalle').value     = btn.dataset.detalle || '';
+                document.getElementById('modalProdPrecio').value      = btn.dataset.precio;
+                document.getElementById('modalProdExistencias').value = btn.dataset.existencias;
+                document.getElementById('modalProdActivo').checked    = btn.dataset.activo === 'true';
+
+                // Seleccionar la categoría correcta
+                var selectCat = document.getElementById('modalProdCategoria');
+                for (var i = 0; i < selectCat.options.length; i++) {
+                    if (selectCat.options[i].value === btn.dataset.categoriaid) {
+                        selectCat.selectedIndex = i;
+                        break;
+                    }
+                }
+
+                // Preview de imagen
+                var preview = document.getElementById('modalProdImagenPreview');
+                var src = btn.dataset.imagen;
+                if (src) {
+                    preview.src = src;
+                    preview.style.display = 'block';
+                } else {
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+            }
+
+            function previsualizarImagenProducto(input) {
+                var preview = document.getElementById('modalProdImagenPreview');
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+
+        <footer th:replace="~{general/fragmentos :: footer}"/>
+    </body>
+</html>

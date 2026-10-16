@@ -31,6 +31,7 @@ public class ProjectConfig implements WebMvcConfigurer {
         resolver.setOrder(0);
         resolver.setCheckExistence(true);
         return resolver;
-        /*Categoria listo*/
+        /*Boton de actualizar en PRODUCTOS = Medio Funcional */
+        
     }
 }

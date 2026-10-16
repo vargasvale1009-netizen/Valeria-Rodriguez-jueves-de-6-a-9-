@@ -47,10 +47,18 @@
                                                onclick="return confirm('¿Desea eliminar esta categoría?')">
                                                 <i class="fas fa-trash"></i> [[#{categoria.btn.eliminar}]]
                                             </a>
-                                            <a th:href="@{/categoria/actualizar/{id}(id=${cat.id})}"
-                                               class="btn btn-warning btn-sm">
+                                            <!-- Botón Actualizar: abre el modal con los datos de la categoría -->
+                                            <button type="button"
+                                                    class="btn btn-warning btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalActualizar"
+                                                    th:data-id="${cat.id}"
+                                                    th:data-descripcion="${cat.descripcion}"
+                                                    th:data-activo="${cat.activo}"
+                                                    th:data-imagen="${cat.imagen}"
+                                                    onclick="abrirModalActualizar(this)">
                                                 <i class="fas fa-pencil-alt"></i> [[#{categoria.btn.actualizar}]]
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -74,6 +82,98 @@
 
             </div>
         </div>
+
+        <!-- ===== MODAL ACTUALIZAR CATEGORÍA ===== -->
+        <div class="modal fade" id="modalActualizar" tabindex="-1" aria-labelledby="modalActualizarLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <!-- Header amarillo -->
+                    <div class="modal-header modal-header-actualizar">
+                        <h5 class="modal-title" id="modalActualizarLabel">[[#{categoria.modal.titulo}]]</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Body del formulario -->
+                    <form id="formActualizar" th:action="@{/categoria/actualizar}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="modalCatId" name="id"/>
+
+                        <div class="modal-body">
+
+                            <!-- Descripción -->
+                            <div class="mb-3">
+                                <label for="modalDescripcion" class="form-label">[[#{categoria.col.descripcion}]]</label>
+                                <input type="text" class="form-control" id="modalDescripcion" name="descripcion" required/>
+                            </div>
+
+                            <!-- Activo -->
+                            <div class="mb-3">
+                                <label class="form-label d-block">[[#{categoria.col.activo}]]</label>
+                                <input type="checkbox" id="modalActivo" name="activo" value="true" class="form-check-input"/>
+                            </div>
+
+                            <!-- Imagen (file input) -->
+                            <div class="mb-3">
+                                <label for="modalImagen" class="form-label">[[#{categoria.col.imagen}]]</label>
+                                <input type="file" class="form-control" id="modalImagen" name="imagenFile"
+                                       accept="image/*" onchange="previsualizarImagen(this)"/>
+                            </div>
+
+                            <!-- Preview de la imagen actual -->
+                            <div class="text-center mt-2">
+                                <img id="modalImagenPreview"
+                                     src=""
+                                     alt="preview"
+                                     class="img-modal-preview"
+                                     onerror="this.style.display='none'"/>
+                            </div>
+
+                        </div>
+
+                        <!-- Footer con botones -->
+                        <div class="modal-footer justify-content-end">
+                            <button type="button" class="btn btn-secondary btn-modal-cerrar" data-bs-dismiss="modal">
+                                <i class="fas fa-times"></i> [[#{categoria.modal.cerrar}]]
+                            </button>
+                            <button type="submit" class="btn btn-success btn-modal-guardar">
+                                <i class="fas fa-save"></i> [[#{categoria.modal.guardar}]]
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function abrirModalActualizar(btn) {
+                document.getElementById('modalCatId').value        = btn.dataset.id;
+                document.getElementById('modalDescripcion').value  = btn.dataset.descripcion;
+                document.getElementById('modalActivo').checked     = btn.dataset.activo === 'true';
+
+                var preview = document.getElementById('modalImagenPreview');
+                var src = btn.dataset.imagen;
+                if (src) {
+                    preview.src = src;
+                    preview.style.display = 'block';
+                } else {
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+            }
+
+            function previsualizarImagen(input) {
+                var preview = document.getElementById('modalImagenPreview');
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
 
         <footer th:replace="~{general/fragmentos :: footer}"/>
     </body>
