@@ -7,18 +7,18 @@
     <body>
         <header th:replace="~{general/fragmentos :: header}"/>
 
-        <div class="container-fluid mt-4 px-4">
+        <div class="contenedor-listado">
             <div class="row">
 
                 <!-- Tabla de categorías -->
                 <div class="col-md-9">
-                    <div class="card shadow-sm">
+                    <div class="card border">
                         <div class="card-body p-0">
-                            <h5 class="card-title px-3 pt-3 pb-2 mb-0 border-bottom">
+                            <h5 class="px-3 pt-3 pb-2 mb-0 border-bottom fw-normal">
                                 [[#{categoria.listado.titulo}]]
                             </h5>
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
+                            <table class="table table-hover mb-0 tabla-categorias">
+                                <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>[[#{categoria.col.descripcion}]]</th>
@@ -61,7 +61,7 @@
 
                 <!-- Panel Total Categorías -->
                 <div class="col-md-3">
-                    <div class="card bg-success text-white text-center shadow-sm">
+                    <div class="card card-total-categorias text-white text-center">
                         <div class="card-body py-4">
                             <h5 class="card-title fw-bold">[[#{categoria.total.titulo}]]</h5>
                             <div class="mt-2">
