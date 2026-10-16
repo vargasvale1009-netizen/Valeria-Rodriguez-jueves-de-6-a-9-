@@ -1,10 +1,31 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+      xmlns:th="http://www.thymeleaf.org">
+
     <head th:replace="~{general/fragmentos :: head}"/>
+
     <body>
         <header th:replace="~{general/fragmentos :: header}"/>
+
+        <!-- Tabs de categorías -->
+        <div class="contenedor-listado py-3">
+            <div class="tabs-categorias d-flex justify-content-center gap-4">
+
+                <!-- Tab "Todas" -->
+                <a th:href="@{/}"
+                   th:classappend="${categoriaSeleccionada == null} ? 'tab-activa' : 'tab-inactiva'">
+                    [[#{index.todas}]]
+                </a>
+
+                <!-- Tab por cada categoría activa -->
+                <a th:each="cat : ${categoriasActivas}"
+                   th:href="@{/(categoriaId=${cat.id})}"
+                   th:text="${cat.descripcion}"
+                   th:classappend="${categoriaSeleccionada != null and categoriaSeleccionada == cat.id} ? 'tab-activa' : 'tab-inactiva'">
+                </a>
+
+            </div>
+        </div>
 
         <footer th:replace="~{general/fragmentos :: footer}"/>
     </body>

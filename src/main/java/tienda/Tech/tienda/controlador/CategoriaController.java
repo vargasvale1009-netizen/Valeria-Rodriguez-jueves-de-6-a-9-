@@ -27,6 +27,11 @@ public class CategoriaController {
         categorias.add(new Categoria(4, "Celulares",    "/img/celulares.jpg",    false));
     }
 
+    // Acceso estático para otros controladores (ej. IndexController)
+    public static List<Categoria> getCategorias() {
+        return categorias;
+    }
+
     @GetMapping("/listado")
     public String listado(Model model) {
         model.addAttribute("categorias", categorias);
@@ -60,6 +65,6 @@ public class CategoriaController {
                 });
 
         return "redirect:/categoria/listado";
-        /*Boton de actualizar en PRODUCTOS = Medio Funcional */
+        /*Semana 6 parte 1 */
     }
 }

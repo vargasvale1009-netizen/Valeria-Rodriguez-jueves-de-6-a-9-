@@ -49,6 +49,11 @@ public class ProductoController {
         productos.add(new Producto(17, "Monitor LG 27",            "Monitor IPS 27 pulgadas QHD 144Hz",          42000.0, 4,  "/img/monitor-lg27.jpg",    1, true));
     }
 
+    // Acceso estático para otros controladores (ej. IndexController)
+    public static List<Producto> getProductos() {
+        return productos;
+    }
+
     @GetMapping("/listado")
     public String listado(Model model) {
         model.addAttribute("productos", productos);

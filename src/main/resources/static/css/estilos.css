@@ -221,3 +221,32 @@ footer p {
     font-weight: bold;
     font-size: 1.1rem;
 }
+
+/* ===== TABS DE CATEGORÍAS (index) ===== */
+.tabs-categorias {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0;
+}
+
+.tabs-categorias a {
+    text-decoration: none;
+    font-size: 1rem;
+    padding-bottom: 8px;
+    display: inline-block;
+}
+
+.tab-activa {
+    font-weight: bold;
+    color: #1f2328 !important;
+    border-bottom: 3px solid #1f2328;
+}
+
+.tab-inactiva {
+    color: #1a6ca8 !important;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-inactiva:hover {
+    color: #0d4f8a !important;
+    border-bottom: 3px solid #1a6ca8;
+}
